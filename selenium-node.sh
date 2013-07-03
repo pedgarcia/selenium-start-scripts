@@ -25,11 +25,22 @@ test ! -f $SELENIUM_SERVER_JAR_PATH && echo "Cannot find file "$SELENIUM_SERVER_
 
 is_process_running()
 {
-        if test ! -f $SERVICE_PID_FILE; then return 1; fi
-        PID=`cat $SERVICE_PID_FILE`
-        if ! ps -p $PID > /dev/null; then rm -f $SERVICE_PID_FILE; return 1; fi
+        if test -s $SERVICE_PID_FILE; then 
+                PID=`cat $SERVICE_PID_FILE`
 
-        return 0
+                if test ! -z $PID; then 
+                        if ps -p $PID > /dev/null; then 
+                                return 0
+                        else                                        
+                                rm -f $SERVICE_PID_FILE; 
+                                return 1; 
+                        fi        
+                else
+                        return 1; 
+                fi
+        else                
+                return 1; 
+        fi
 }
 
 case "${1:-''}" in
@@ -39,17 +50,16 @@ case "${1:-''}" in
                 then
                         echo "$SERVICE_NAME is already running."
                 else
+                        echo "Starting $SERVICE_NAME..."
                         DISPLAY=:$DISPLAY_NUMBER  java -jar $SELENIUM_SERVER_JAR_PATH $SELENIUM_SERVER_ARGUMENTS > $SERVICE_LOG_DIR/$SERVICE_LOG_OUTPUT_FILE 2> $SERVICE_LOG_DIR/$SERVICE_LOG_ERROR_FILE & echo $! > $SERVICE_PID_FILE
-                        echo -n "Starting $SERVICE_NAME on display $DISPLAY_NUMBER... "
 
-                        error=$?
-
-                        if test $error -gt 0
+                        if is_process_running
                         then
-                                echo "${bon}Error $error! Couldn't start $SERVICE_NAME!${boff}"
-                        else
                                 PID=`cat $SERVICE_PID_FILE`
-                                echo "pid="$PID
+                                echo "PID="$PID
+                        else
+                                echo "Couldn't start $SERVICE_NAME!"
+                                tail $SERVICE_LOG_DIR/$SERVICE_LOG_ERROR_FILE
                         fi
                 fi
         ;;
