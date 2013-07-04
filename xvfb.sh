@@ -82,6 +82,16 @@ case "${1:-''}" in
                 fi
         ;;
 
+        'status')
+                if is_process_running
+                then
+                        PID=`cat $SERVICE_PID_FILE`
+                        echo "Service $SERVICE_NAME is running, PID="$PID
+                else
+                        echo "Service $SERVICE_NAME is NOT running"
+                fi
+        ;;
+
         *)      # no parameter specified
                 echo "Usage: $0 start|stop"
                 exit 1
