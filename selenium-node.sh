@@ -53,6 +53,8 @@ case "${1:-''}" in
                         echo "Starting $SERVICE_NAME..."
                         DISPLAY=:$DISPLAY_NUMBER  java -jar $SELENIUM_SERVER_JAR_PATH $SELENIUM_SERVER_ARGUMENTS > $SERVICE_LOG_DIR/$SERVICE_LOG_OUTPUT_FILE 2> $SERVICE_LOG_DIR/$SERVICE_LOG_ERROR_FILE & echo $! > $SERVICE_PID_FILE
 
+                        sleep 1
+
                         if is_process_running
                         then
                                 PID=`cat $SERVICE_PID_FILE`
