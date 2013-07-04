@@ -16,8 +16,15 @@ case "${1:-''}" in
                 sh xvfb.sh stop
         ;;
 
+        'status')
+                sh selenium-node.sh status
+                sh selenium-hub.sh status
+                sh x11vnc.sh status
+                sh xvfb.sh status
+        ;;
+
         *)      # no parameter specified
-                echo "Usage: $0 start|stop"
+                echo "Usage: $0 start|stop|status"
                 exit 1
         ;;
 
