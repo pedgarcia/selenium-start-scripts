@@ -8,7 +8,7 @@ SERVICE_PID_DIR=./pid
 SERVICE_PID_FILE=$SERVICE_PID_DIR/selenium-node.pid
 
 SELENIUM_SERVER_JAR_PATH=./selenium-server-standalone.jar
-SELENIUM_HUB="127.0.0.1:4444"
+SELENIUM_HUB="ao-vm25.adocean.lan:4444"
 SELENIUM_SERVER_ARGUMENTS="-role node -hub http://$SELENIUM_HUB/grid/register -maxSession 4 -browser browserName=chrome,maxInstances=2 -browser browserName=firefox,maxInstances=2"
 DISPLAY_NUMBER=99
 
