@@ -49,6 +49,7 @@ case "${1:-''}" in
                         echo "$SERVICE_NAME is already running."
                 else
                         echo "Starting $SERVICE_NAME..."
+                        echo "java -jar $SELENIUM_SERVER_JAR_PATH $SELENIUM_SERVER_ARGUMENTS"
                         java -jar $SELENIUM_SERVER_JAR_PATH $SELENIUM_SERVER_ARGUMENTS > $SERVICE_LOG_DIR/$SERVICE_LOG_OUTPUT_FILE 2> $SERVICE_LOG_DIR/$SERVICE_LOG_ERROR_FILE & echo $! > $SERVICE_PID_FILE
 
                         sleep 1

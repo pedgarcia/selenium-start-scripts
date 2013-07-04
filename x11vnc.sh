@@ -8,7 +8,7 @@ SERVICE_PID_DIR=./pid
 SERVICE_PID_FILE=$SERVICE_PID_DIR/x11vnc.pid
 
 DISPLAY_NUMBER=99
-XVNC_ARGUMENTS="-display :99 -usepw -forever"
+XVNC_ARGUMENTS="-display :$DISPLAY_NUMBER -usepw -forever"
 
 BASEDIR=$(dirname $0)
 cd $BASEDIR
@@ -47,6 +47,7 @@ case "${1:-''}" in
                         echo "$SERVICE_NAME is already running."
                 else
                         echo "Starting $SERVICE_NAME..."
+                        echo "x11vnc $XVNC_ARGUMENTS"
                         x11vnc $XVNC_ARGUMENTS > $SERVICE_LOG_DIR/$SERVICE_LOG_OUTPUT_FILE 2> $SERVICE_LOG_DIR/$SERVICE_LOG_ERROR_FILE & echo $! > $SERVICE_PID_FILE
 
                         sleep 1
