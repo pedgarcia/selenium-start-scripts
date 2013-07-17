@@ -1,30 +1,53 @@
 #!/bin/bash
 
+BASEDIR=$(dirname $0)
+cd $BASEDIR
+
+start_all()
+{
+        for script in xvfb.sh x11vnc.sh selenium-hub.sh selenium-node.sh phantomjs.sh
+        do 
+                sh $script start
+        done
+}
+
+stop_all()
+{
+        for script in phantomjs.sh selenium-node.sh selenium-hub.sh x11vnc.sh xvfb.sh
+        do 
+                sh $script stop
+        done
+}
+
+status_all()
+{
+        for script in phantomjs.sh selenium-node.sh selenium-hub.sh x11vnc.sh xvfb.sh
+        do 
+                sh $script status
+        done        
+}
+
 case "${1:-''}" in
 
         'start')
-                sh xvfb.sh start
-                sh x11vnc.sh start
-                sh selenium-hub.sh start
-                sh selenium-node.sh start
+                start_all
         ;;
 
         'stop')
-                sh selenium-node.sh stop
-                sh selenium-hub.sh stop
-                sh x11vnc.sh stop
-                sh xvfb.sh stop
+                stop_all
         ;;
 
         'status')
-                sh selenium-node.sh status
-                sh selenium-hub.sh status
-                sh x11vnc.sh status
-                sh xvfb.sh status
+                status_all
         ;;
 
+        'restart')
+                stop_all
+                start_all
+        ;;        
+
         *)      # no parameter specified
-                echo "Usage: $0 start|stop|status"
+                echo "Usage: $0 start|stop|status|restart"
                 exit 1
         ;;
 

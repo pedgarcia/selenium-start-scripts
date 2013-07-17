@@ -1,16 +1,13 @@
 #!/bin/bash
 
-SERVICE_NAME="Selenium node"
+SERVICE_NAME="PhantomJS"
 SERVICE_LOG_DIR=./log
-SERVICE_LOG_OUTPUT_FILE=selenium-node-output.log
-SERVICE_LOG_ERROR_FILE=selenium-node-error.log
+SERVICE_LOG_OUTPUT_FILE=phantomjs-output.log
+SERVICE_LOG_ERROR_FILE=phantomjs-error.log
 SERVICE_PID_DIR=./pid
-SERVICE_PID_FILE=$SERVICE_PID_DIR/selenium-node.pid
+SERVICE_PID_FILE=$SERVICE_PID_DIR/phantomjs.pid
 
-SELENIUM_SERVER_JAR_PATH=./selenium-server-standalone.jar
-SELENIUM_HUB="127.0.0.1:4444"
-SELENIUM_SERVER_ARGUMENTS="-role node -hub http://$SELENIUM_HUB/grid/register -maxSession 4 -browser browserName=chrome,maxInstances=2 -browser browserName=firefox,maxInstances=2"
-DISPLAY_NUMBER=$XVFB_DISPLAY
+PHANTOMJS_ARGUMENTS="--wd"
 
 BASEDIR=$(dirname $0)
 cd $BASEDIR
@@ -20,8 +17,6 @@ test ! -d $SERVICE_LOG_DIR && exit 1
 
 test ! -d $SERVICE_PID_DIR && mkdir -p $SERVICE_PID_DIR
 test ! -d $SERVICE_PID_DIR && exit 1
-
-test ! -f $SELENIUM_SERVER_JAR_PATH && echo "Cannot find file "$SELENIUM_SERVER_JAR_PATH" in "`pwd` && exit 1
 
 is_process_running()
 {
@@ -51,11 +46,11 @@ case "${1:-''}" in
                         echo "$SERVICE_NAME is already running."
                 else
                         echo "Starting $SERVICE_NAME..."
-                        echo "DISPLAY=$DISPLAY_NUMBER java -jar $SELENIUM_SERVER_JAR_PATH $SELENIUM_SERVER_ARGUMENTS"
-                        DISPLAY=$DISPLAY_NUMBER  java -jar $SELENIUM_SERVER_JAR_PATH $SELENIUM_SERVER_ARGUMENTS > $SERVICE_LOG_DIR/$SERVICE_LOG_OUTPUT_FILE 2> $SERVICE_LOG_DIR/$SERVICE_LOG_ERROR_FILE & echo $! > $SERVICE_PID_FILE
+                        echo "Phantomjs $PHANTOMJS_ARGUMENTS"
+                        phantomjs $PHANTOMJS_ARGUMENTS > $SERVICE_LOG_DIR/$SERVICE_LOG_OUTPUT_FILE 2> $SERVICE_LOG_DIR/$SERVICE_LOG_ERROR_FILE & echo $! > $SERVICE_PID_FILE
 
-                        sleep 1
-
+                        sleep 0.5
+                        
                         if is_process_running
                         then
                                 PID=`cat $SERVICE_PID_FILE`
